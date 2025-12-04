@@ -59,7 +59,7 @@ export default function App() {
       case 'home':
         return <HomeScreen onAddRecord={handleAddRecord} onOpenChat={handleOpenChat} />;
       case 'record':
-        return <RecordScreen />;
+        return <RecordScreen isDarkMode={isDarkMode} />;
       case 'chat':
         return <ChatScreen />;
       case 'community':
@@ -82,7 +82,7 @@ export default function App() {
       />
 
       {/* Main Content Area - Add bottom padding to prevent dial overlap */}
-      <main className="flex-1 pt-16 pb-24 overflow-hidden">
+      <main className="flex-1 pt-16 pb-24 overflow-hidden bg-background">
         {renderScreen()}
       </main>
 

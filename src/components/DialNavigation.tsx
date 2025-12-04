@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { Home, FileText, MessageCircle, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface DialNavigationProps {
   currentTab: string;
@@ -8,15 +9,16 @@ interface DialNavigationProps {
 }
 
 export default function DialNavigation({ currentTab, onTabChange }: DialNavigationProps) {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const dialRef = useRef<HTMLDivElement>(null);
 
   const tabs = [
-    { id: 'home', label: 'Home', icon: Home, color: '#6AA6FF' },
-    { id: 'record', label: 'Record', icon: FileText, color: '#FFC98B' },
-    { id: 'chat', label: 'AI Chat', icon: MessageCircle, color: '#9ADBC6' },
-    { id: 'community', label: 'Community', icon: Users, color: '#6AA6FF' },
+    { id: 'home', label: t('nav.home'), icon: Home, color: '#6AA6FF' },
+    { id: 'record', label: t('nav.record'), icon: FileText, color: '#FFC98B' },
+    { id: 'chat', label: t('nav.chat'), icon: MessageCircle, color: '#9ADBC6' },
+    { id: 'community', label: t('nav.community'), icon: Users, color: '#6AA6FF' },
   ];
 
   const currentTabIndex = tabs.findIndex((tab) => tab.id === currentTab);

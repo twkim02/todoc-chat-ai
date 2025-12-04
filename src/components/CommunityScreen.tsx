@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback } from './ui/avatar';
 import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { toast } from 'sonner';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface Comment {
   id: string;
@@ -33,6 +34,7 @@ interface Post {
 }
 
 export default function CommunityScreen() {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('all');
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [expandedPostId, setExpandedPostId] = useState<string | null>(null);
@@ -190,7 +192,7 @@ export default function CommunityScreen() {
 
   if (isWriting) {
     return (
-      <div className="h-full w-full overflow-auto bg-gradient-to-b from-[#FFFDF9] to-[#FFF8F0] dark:from-gray-900 dark:to-gray-800">
+      <div className="h-full w-full overflow-auto">
         <div className="max-w-2xl mx-auto p-4">
           <div className="flex items-center gap-3 mb-6">
             <Button
@@ -205,12 +207,12 @@ export default function CommunityScreen() {
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <h2 className="text-[#6AA6FF] dark:text-[#9ADBC6]">Create New Post</h2>
+            <h2 className="text-[#6AA6FF] dark:text-[#9ADBC6]">{t('community.writePost')}</h2>
           </div>
 
           <div className="space-y-4">
             <div>
-              <Label className="text-sm font-medium mb-2 block">Board</Label>
+              <Label className="text-sm font-medium mb-2 block">{t('community.category')}</Label>
               <div className="grid grid-cols-3 gap-2">
                 {['Recipes', 'Tips', 'Support'].map((category) => (
                   <button
@@ -220,11 +222,11 @@ export default function CommunityScreen() {
                       py-2 px-3 rounded-lg text-sm font-medium transition-all
                       ${newPost.category === category
                         ? 'bg-[#6AA6FF] text-white shadow-md'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                       }
                     `}
                   >
-                    {category}
+                    {category === 'Recipes' ? t('community.recipes') : category === 'Tips' ? t('community.tips') : t('community.support')}
                   </button>
                 ))}
               </div>
@@ -232,11 +234,11 @@ export default function CommunityScreen() {
 
             <div>
               <Label htmlFor="title" className="text-sm font-medium mb-2 block">
-                Title
+                {t('community.title2')}
               </Label>
               <Input
                 id="title"
-                placeholder="Enter a title"
+                placeholder={t('community.titlePlaceholder')}
                 value={newPost.title}
                 onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
                 className="border-[#6AA6FF]/30"
@@ -245,11 +247,11 @@ export default function CommunityScreen() {
 
             <div>
               <Label htmlFor="content" className="text-sm font-medium mb-2 block">
-                Content
+                {t('community.content')}
               </Label>
               <Textarea
                 id="content"
-                placeholder="Enter your content"
+                placeholder={t('community.contentPlaceholder')}
                 value={newPost.content}
                 onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
                 className="min-h-[200px] border-[#6AA6FF]/30 resize-none"
@@ -259,11 +261,11 @@ export default function CommunityScreen() {
             <div>
               <Label htmlFor="tags" className="text-sm font-medium mb-2 block flex items-center gap-2">
                 <Tag className="h-4 w-4" />
-                Tags
+                {t('community.tags')}
               </Label>
               <Input
                 id="tags"
-                placeholder="Enter tags separated by commas (e.g., baby food, 6 months)"
+                placeholder={t('community.tagsPlaceholder')}
                 value={newPost.tags}
                 onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })}
                 className="border-[#6AA6FF]/30"
@@ -279,35 +281,35 @@ export default function CommunityScreen() {
                   className={`gap-2 ${showMap ? 'bg-[#6AA6FF]/10 text-[#6AA6FF] border-[#6AA6FF]' : ''}`}
                 >
                   <MapPin className="h-4 w-4" />
-                  {newPost.location || 'Add Location'}
+                  {newPost.location || t('community.addLocation')}
                 </Button>
                 <Button variant="outline" size="sm" className="gap-2" disabled>
                   <ImageIcon className="h-4 w-4" />
-                  Add Image
+                  {t('community.addImage')}
                 </Button>
               </div>
 
               {showMap && (
-                <div className="bg-gray-100 rounded-lg p-4 mb-4 animate-in fade-in slide-in-from-top-2">
-                  <div className="bg-gray-200 h-40 rounded-lg flex flex-col items-center justify-center mb-3 relative overflow-hidden">
+                <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 mb-4 animate-in fade-in slide-in-from-top-2">
+                  <div className="bg-gray-200 dark:bg-gray-600 h-40 rounded-lg flex flex-col items-center justify-center mb-3 relative overflow-hidden">
                     <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#6AA6FF 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
                     <MapPin className="h-8 w-8 text-[#6AA6FF] mb-2 z-10" />
-                    <p className="text-sm text-gray-600 z-10 font-medium">Select Location</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 z-10 font-medium">{t('community.selectLocation')}</p>
                   </div>
                   <div className="flex gap-2">
                     <Input
-                      placeholder="Search location..."
-                      className="bg-white"
+                      placeholder={t('community.searchLocation')}
+                      className="bg-white dark:bg-gray-800"
                     />
                     <Button
                       onClick={() => {
                         setNewPost({ ...newPost, location: 'Gangnam-gu, Seoul' });
                         setShowMap(false);
-                        toast.success('Location added');
+                        toast.success(t('community.locationAdded'));
                       }}
                       className="bg-[#6AA6FF] hover:bg-[#5a96ef]"
                     >
-                      Confirm
+                      {t('community.publish')}
                     </Button>
                   </div>
                 </div>
@@ -324,13 +326,13 @@ export default function CommunityScreen() {
                   setShowMap(false);
                 }}
               >
-                Cancel
+                {t('community.cancel')}
               </Button>
               <Button
                 className="flex-1 bg-[#6AA6FF] hover:bg-[#5a96ef]"
                 onClick={handleSubmitPost}
               >
-                Post
+                {t('community.publish')}
               </Button>
             </div>
           </div>
@@ -340,13 +342,13 @@ export default function CommunityScreen() {
   }
 
   return (
-    <div className="h-full w-full overflow-auto bg-gradient-to-b from-[#FFFDF9] to-[#FFF8F0] dark:from-gray-900 dark:to-gray-800">
+    <div className="h-full w-full overflow-auto">
       <div className="max-w-2xl mx-auto p-4">
         <div className="mb-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-[#6AA6FF] dark:text-[#9ADBC6] mb-1">Community</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Share your parenting experiences</p>
+              <h2 className="text-[#6AA6FF] dark:text-[#9ADBC6] mb-1">{t('community.title')}</h2>
+              <p className="text-sm text-[#CFCFCF] dark:text-[#CFCFCF]">{t('community.subtitle')}</p>
             </div>
             <Button
               className="bg-[#6AA6FF] hover:bg-[#5a96ef] rounded-full"
@@ -360,13 +362,13 @@ export default function CommunityScreen() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
             <Input
-              placeholder="Search..."
-              className="pl-10 border-[#6AA6FF]/30 dark:border-[#9ADBC6]/30 dark:bg-gray-800 dark:text-white"
+              placeholder={t('community.searchLocation')}
+              className="pl-10 border-[#6AA6FF]/30 dark:border-[#9ADBC6]/30 bg-card"
             />
           </div>
         </div>
 
-        <div className="mb-4 bg-white dark:bg-gray-800 rounded-2xl p-1.5 shadow-md border border-gray-100 dark:border-gray-700">
+        <div className="mb-4 bg-card rounded-2xl p-1.5 shadow-md border border-border">
           <div className="grid grid-cols-4 gap-1 relative">
             {['all', 'recipe', 'tips', 'qna'].map((tab) => (
               <button
@@ -380,10 +382,10 @@ export default function CommunityScreen() {
                   }
                 `}
               >
-                {tab === 'all' && 'All'}
-                {tab === 'recipe' && 'Recipes'}
-                {tab === 'tips' && 'Tips'}
-                {tab === 'qna' && 'Support'}
+                {tab === 'all' && t('community.all')}
+                {tab === 'recipe' && t('community.recipes')}
+                {tab === 'tips' && t('community.tips')}
+                {tab === 'qna' && t('community.support')}
               </button>
             ))}
           </div>
@@ -393,7 +395,7 @@ export default function CommunityScreen() {
           {filteredPosts.map((post) => (
             <Card
               key={post.id}
-              className="bg-white dark:bg-gray-800 shadow-lg border-2 border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow overflow-hidden"
+              className="bg-card shadow-lg border-2 border-border hover:shadow-xl transition-shadow overflow-hidden"
             >
               {post.image && (
                 <div className="w-full h-48 overflow-hidden relative group">
@@ -416,11 +418,11 @@ export default function CommunityScreen() {
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <p className="text-sm font-medium dark:text-gray-200">{post.author}</p>
+                    <p className="text-sm font-medium text-[#F3F3F3] dark:text-[#F3F3F3]">{post.author}</p>
                     <div className="flex items-center gap-2">
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{post.timestamp}</p>
+                      <p className="text-xs text-[#CFCFCF] dark:text-[#CFCFCF]">{post.timestamp}</p>
                       {post.location && (
-                        <span className="flex items-center text-xs text-gray-400 dark:text-gray-500">
+                        <span className="flex items-center text-xs text-[#A5A5A5] dark:text-[#A5A5A5]">
                           <MapPin className="h-3 w-3 mr-0.5" />
                           {post.location}
                         </span>
@@ -443,8 +445,8 @@ export default function CommunityScreen() {
                 </div>
 
                 <div className="mb-3">
-                  <h3 className="mb-1 text-gray-900 dark:text-gray-100 font-semibold">{post.title}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                  <h3 className="mb-1 text-[#F3F3F3] dark:text-[#F3F3F3] font-semibold">{post.title}</h3>
+                  <p className="text-sm text-[#F3F3F3] dark:text-[#F3F3F3] line-clamp-2">
                     {post.content}
                   </p>
                 </div>
@@ -453,7 +455,7 @@ export default function CommunityScreen() {
                   {post.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                      className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-[#F3F3F3] dark:text-[#F3F3F3]"
                     >
                       #{tag}
                     </span>
@@ -465,7 +467,7 @@ export default function CommunityScreen() {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleLike(post.id)}
-                    className={`gap-2 ${likedPosts.has(post.id) ? 'text-red-500' : 'text-gray-600 dark:text-gray-400'
+                    className={`gap-2 ${likedPosts.has(post.id) ? 'text-red-500' : 'text-[#F3F3F3] dark:text-[#F3F3F3]'
                       }`}
                   >
                     <Heart
@@ -479,13 +481,13 @@ export default function CommunityScreen() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={`gap-2 ${expandedPostId === post.id ? 'text-[#6AA6FF] bg-[#6AA6FF]/10 dark:bg-[#9ADBC6]/20' : 'text-gray-600 dark:text-gray-400'}`}
+                    className={`gap-2 ${expandedPostId === post.id ? 'text-[#6AA6FF] bg-[#6AA6FF]/10 dark:bg-[#9ADBC6]/20' : 'text-[#F3F3F3] dark:text-[#F3F3F3]'}`}
                     onClick={() => toggleComments(post.id)}
                   >
                     <MessageCircle className="h-4 w-4" />
                     <span className="text-sm">{post.comments}</span>
                   </Button>
-                  <Button variant="ghost" size="sm" className="ml-auto text-gray-600 dark:text-gray-400">
+                  <Button variant="ghost" size="sm" className="ml-auto text-[#F3F3F3] dark:text-[#F3F3F3]">
                     <Share2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -497,24 +499,24 @@ export default function CommunityScreen() {
                         post.commentsList.map((comment) => (
                           <div key={comment.id} className="flex gap-2">
                             <Avatar className="h-6 w-6 bg-gray-200 dark:bg-gray-700">
-                              <AvatarFallback className="text-[10px] dark:text-gray-300">{comment.author[0]}</AvatarFallback>
+                              <AvatarFallback className="text-[10px] text-[#F3F3F3] dark:text-[#F3F3F3]">{comment.author[0]}</AvatarFallback>
                             </Avatar>
                             <div className="flex-1 bg-gray-50 dark:bg-gray-700 rounded-lg p-2">
                               <div className="flex justify-between items-center mb-1">
-                                <span className="text-xs font-medium dark:text-gray-200">{comment.author}</span>
-                                <span className="text-[10px] text-gray-400 dark:text-gray-500">{comment.timestamp}</span>
+                                <span className="text-xs font-medium text-[#F3F3F3] dark:text-[#F3F3F3]">{comment.author}</span>
+                                <span className="text-[10px] text-[#A5A5A5] dark:text-[#A5A5A5]">{comment.timestamp}</span>
                               </div>
-                              <p className="text-xs text-gray-600 dark:text-gray-300">{comment.content}</p>
+                              <p className="text-xs text-[#F3F3F3] dark:text-[#F3F3F3]">{comment.content}</p>
                             </div>
                           </div>
                         ))
                       ) : (
-                        <p className="text-center text-sm text-gray-400 dark:text-gray-500 py-2">No comments yet. Be the first to share!</p>
+                        <p className="text-center text-sm text-[#A5A5A5] dark:text-[#A5A5A5] py-2">{t('community.noComments')}</p>
                       )}
                     </div>
                     <div className="flex gap-2">
                       <Input
-                        placeholder="Write a comment..."
+                        placeholder={t('community.writeComment')}
                         className="h-8 text-sm border-[#6AA6FF]/30"
                       />
                       <Button size="sm" className="h-8 w-8 p-0 bg-[#6AA6FF] hover:bg-[#5a96ef]">

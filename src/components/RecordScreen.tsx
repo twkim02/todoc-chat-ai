@@ -13,8 +13,8 @@ import {
   Calendar as CalendarIcon,
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { enUS } from 'date-fns/locale';
-import { Button, buttonVariants } from './ui/button';
+import { enUS, ko } from 'date-fns/locale';
+import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
@@ -29,7 +29,7 @@ import { toast } from 'sonner';
 import { cn } from './ui/utils';
 import { Calendar } from './ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { VariantProps } from 'class-variance-authority';
+import { useLanguage } from '../contexts/LanguageContext';
 
 // --- MOCK DATA & TYPES ---
 interface JournalEntry {
@@ -63,21 +63,20 @@ const mockEntries: JournalEntry[] = [
   },
 ];
 
-const recordCategories = [
-  { id: 'growth', label: 'Growth', icon: <TrendingUp className="h-5 w-5" />, color: 'var(--primary)' },
-  { id: 'sleep', label: 'Sleep', icon: <Moon className="h-5 w-5" />, color: 'var(--accent)' },
-  { id: 'meal', label: 'Meal', icon: <Utensils className="h-5 w-5" />, color: 'var(--secondary)' },
-  { id: 'health', label: 'Health', icon: <Heart className="h-5 w-5" />, color: 'var(--destructive)' },
-  { id: 'development', label: 'Development', icon: <Baby className="h-5 w-5" />, color: 'var(--primary)' },
-  { id: 'emotion', label: 'Emotion', icon: <Smile className="h-5 w-5" />, color: 'var(--emotion)' },
+const recordCategories = (t: (key: any) => string) => [
+  { id: 'growth', label: t('category.growth'), icon: <TrendingUp className="h-5 w-5" />, color: 'var(--primary)' },
+  { id: 'sleep', label: t('category.sleep'), icon: <Moon className="h-5 w-5" />, color: 'var(--accent)' },
+  { id: 'meal', label: t('category.meal'), icon: <Utensils className="h-5 w-5" />, color: 'var(--secondary)' },
+  { id: 'health', label: t('category.health'), icon: <Heart className="h-5 w-5" />, color: 'var(--destructive)' },
+  { id: 'development', label: t('category.development'), icon: <Baby className="h-5 w-5" />, color: 'var(--primary)' },
+  { id: 'emotion', label: t('category.emotion'), icon: <Smile className="h-5 w-5" />, color: 'var(--emotion)' },
 ];
-
-const getCategory = (id: string) => recordCategories.find(cat => cat.id === id);
 
 // --- SUB-COMPONENTS ---
 
 const JournalEntryCard = ({ entry }: { entry: JournalEntry }) => {
-  const categoryInfo = getCategory(entry.category);
+  const { t } = useLanguage();
+  const categoryInfo = recordCategories(t).find(cat => cat.id === entry.category);
   if (!categoryInfo) return null;
 
   return (
@@ -142,8 +141,9 @@ const JournalEntryCard = ({ entry }: { entry: JournalEntry }) => {
   );
 };
 
-const JournalForm = ({ categoryId, onSave, onBack }) => {
-  const categoryInfo = getCategory(categoryId);
+const JournalForm = ({ categoryId, onSave, onBack, isDarkMode }: { categoryId: string; onSave: (data: any) => void; onBack: () => void; isDarkMode: boolean }) => {
+  const { t, language } = useLanguage();
+  const categoryInfo = recordCategories(t).find(cat => cat.id === categoryId);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -155,7 +155,7 @@ const JournalForm = ({ categoryId, onSave, onBack }) => {
 
   const handleSave = () => {
     if (!title || !date) {
-      toast.error('Please fill in the title and date.');
+      toast.error(t('form.fillRequired'));
       return;
     }
     onSave({
@@ -165,16 +165,6 @@ const JournalForm = ({ categoryId, onSave, onBack }) => {
       date,
       details,
     });
-  };
-
-  const getButtonVariant = (catId: string): VariantProps<typeof buttonVariants>['variant'] => {
-    switch (catId) {
-      case 'health': return 'destructive';
-      case 'meal': return 'secondary';
-      case 'sleep': return 'accent';
-      case 'emotion': return 'emotion';
-      default: return 'default';
-    }
   };
 
   const renderSpecificFields = () => {
@@ -359,13 +349,13 @@ const JournalForm = ({ categoryId, onSave, onBack }) => {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <h2 className="text-lg font-semibold" style={{ color: categoryInfo.color }}>
-          New {categoryInfo.label} Entry
+          {t('form.new')} {categoryInfo.label} {t('form.entry')}
         </h2>
       </div>
       <div className="space-y-6">
         <div className="space-y-4">
           <div>
-            <label className="text-sm font-medium mb-2 block">Date</label>
+            <label className="text-sm font-medium mb-2 block">{t('form.date')}</label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -376,7 +366,7 @@ const JournalForm = ({ categoryId, onSave, onBack }) => {
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP", { locale: enUS }) : <span>Pick a date</span>}
+                  {date ? format(date, "PPP", { locale: language === 'ko' ? ko : enUS }) : <span>{t('form.pickDate')}</span>}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -385,16 +375,16 @@ const JournalForm = ({ categoryId, onSave, onBack }) => {
                   selected={date}
                   onSelect={setDate}
                   initialFocus
-                  locale={enUS}
+                  locale={language === 'ko' ? ko : enUS}
                 />
               </PopoverContent>
             </Popover>
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 block">Title</label>
+            <label className="text-sm font-medium mb-2 block">{t('form.title')}</label>
             <Input
-              placeholder="Enter a title"
+              placeholder={t('form.titlePlaceholder')}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="border-muted-foreground/20"
@@ -405,9 +395,9 @@ const JournalForm = ({ categoryId, onSave, onBack }) => {
           {renderSpecificFields()}
 
           <div>
-            <label className="text-sm font-medium mb-2 block">Comment</label>
+            <label className="text-sm font-medium mb-2 block">{t('form.comment')}</label>
             <Textarea
-              placeholder="Add any additional notes..."
+              placeholder={t('form.commentPlaceholder')}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="min-h-[120px] border-muted-foreground/20"
@@ -415,35 +405,48 @@ const JournalForm = ({ categoryId, onSave, onBack }) => {
           </div>
         </div>
 
-        <Button
+        <button
           onClick={handleSave}
-          className={cn(
-            "w-full h-12 text-base font-semibold shadow-md transition-all hover:scale-[1.02]",
-            categoryId === 'emotion' && "bg-black text-white hover:bg-gray-800"
-          )}
-          variant={getButtonVariant(categoryId)}
+          type="button"
+          style={{
+            backgroundColor:
+              categoryId === 'growth' ? '#6AA6FF' :
+              categoryId === 'sleep' ? '#9ADBC6' :
+              categoryId === 'meal' ? '#FFC98B' :
+              categoryId === 'health' ? '#ef4444' :
+              categoryId === 'development' ? '#6AA6FF' :
+              categoryId === 'emotion' ? (isDarkMode ? 'white' : '#1e3a8a') :
+              '#6b7280',
+            color:
+              categoryId === 'emotion' ? (isDarkMode ? '#1e3a8a' : 'white') :
+              'white'
+          }}
+          className="w-full h-12 text-base font-semibold shadow-md transition-all hover:scale-[1.02] rounded-md"
         >
-          Save Entry
-        </Button>
+          {t('form.saveEntry')}
+        </button>
       </div>
     </div>
   );
 };
 
 // --- MAIN COMPONENT ---
-export default function RecordScreen() {
+export default function RecordScreen({ isDarkMode = false }: { isDarkMode?: boolean }) {
+  const { t, language } = useLanguage();
   const [view, setView] = useState<{ screen: 'list' | 'form'; categoryId: string | null }>({ screen: 'list', categoryId: null });
   const [entries, setEntries] = useState<JournalEntry[]>(mockEntries);
   const [isAiSheetOpen, setIsAiSheetOpen] = useState(false);
+  const [showAllEntries, setShowAllEntries] = useState(false);
 
   const handleSaveEntry = (newEntryData: { category: string; title: string; content: string; date: Date }) => {
     const newEntry: JournalEntry = {
       id: Date.now().toString(),
-      timestamp: format(newEntryData.date, 'PPP', { locale: enUS }),
+      timestamp: format(newEntryData.date, 'PPP', { locale: language === 'ko' ? ko : enUS }),
       ...newEntryData,
     };
     setEntries([newEntry, ...entries]);
-    toast.success(`New ${getCategory(newEntry.category)?.label} entry has been saved.`);
+    const categoryLabel = recordCategories(t).find(cat => cat.id === newEntry.category)?.label || '';
+    toast.success(`${categoryLabel} ${t('form.saved')}`);
     setView({ screen: 'list', categoryId: null });
   };
 
@@ -453,32 +456,24 @@ export default function RecordScreen() {
         categoryId={view.categoryId}
         onSave={handleSaveEntry}
         onBack={() => setView({ screen: 'list', categoryId: null })}
+        isDarkMode={isDarkMode}
       />
     );
   }
 
+  const displayedEntries = showAllEntries ? entries : entries.slice(0, 3);
+
   return (
     <div className="h-full w-full overflow-auto bg-background text-foreground p-4 pb-24">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold text-primary">Baby's Journal</h1>
+        <h1 className="text-xl font-bold text-primary">{t('record.title')}</h1>
       </div>
 
       <div className="space-y-4">
-        <div className="space-y-3">
-          {entries.length > 0 ? (
-            entries.map(entry => <JournalEntryCard key={entry.id} entry={entry} />)
-          ) : (
-            <div className="text-center py-10">
-              <p className="text-muted-foreground">No entries yet.</p>
-              <p className="text-muted-foreground text-sm">Add your first entry from the categories below!</p>
-            </div>
-          )}
-        </div>
-
-        <div className="pt-6">
-          <h2 className="font-medium text-muted-foreground mb-3">Add New Entry</h2>
+        <div className="pt-2">
+          <h2 className="font-medium text-muted-foreground mb-3">{t('record.addNew')}</h2>
           <div className="grid grid-cols-3 gap-3">
-            {recordCategories.map((cat) => (
+            {recordCategories(t).map((cat) => (
               <Card
                 key={cat.id}
                 className="flex flex-col items-center justify-center p-4 text-center cursor-pointer hover:shadow-md transition-shadow"
@@ -489,6 +484,38 @@ export default function RecordScreen() {
               </Card>
             ))}
           </div>
+        </div>
+
+        <div className="pt-6 space-y-3">
+          <h2 className="font-medium text-muted-foreground">{t('record.recent')}</h2>
+          {entries.length > 0 ? (
+            <>
+              {displayedEntries.map(entry => <JournalEntryCard key={entry.id} entry={entry} />)}
+              {entries.length > 3 && !showAllEntries && (
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setShowAllEntries(true)}
+                >
+                  {t('record.seeMore')} ({entries.length - 3} {t('record.olderEntries')})
+                </Button>
+              )}
+              {showAllEntries && entries.length > 3 && (
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setShowAllEntries(false)}
+                >
+                  {t('record.showLess')}
+                </Button>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-10">
+              <p className="text-muted-foreground">{t('record.noEntries')}</p>
+              <p className="text-muted-foreground text-sm">{t('record.noEntriesDesc')}</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -503,11 +530,11 @@ export default function RecordScreen() {
             <DrawerHeader>
               <DrawerTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
-                AI Assistant
+                {t('ai.title')}
               </DrawerTitle>
             </DrawerHeader>
             <div className="p-4">
-              <p className="text-muted-foreground text-sm">The AI Assistant feature is coming soon.</p>
+              <p className="text-muted-foreground text-sm">{t('ai.comingSoon')}</p>
             </div>
           </DrawerContent>
         </Drawer>

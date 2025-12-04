@@ -3,6 +3,7 @@ import { Plus, Bot, TrendingUp, Heart, Moon, Utensils, Pencil } from 'lucide-rea
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface HomeScreenProps {
   onAddRecord: () => void;
@@ -10,6 +11,7 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen({ onAddRecord, onOpenChat }: HomeScreenProps) {
+  const { t } = useLanguage();
   const [currentPage, setCurrentPage] = useState(0);
   const [babyName, setBabyName] = useState('Hajun');
   const [isEditingName, setIsEditingName] = useState(false);
@@ -22,8 +24,8 @@ export default function HomeScreen({ onAddRecord, onOpenChat }: HomeScreenProps)
 
   const babyInfo = {
     name: babyName,
-    gender: 'Boy',
-    age: '8 months',
+    gender: t('home.boy'),
+    age: `8 ${t('home.months')}`,
     photo: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400&h=400&fit=crop',
   };
 
@@ -35,32 +37,32 @@ export default function HomeScreen({ onAddRecord, onOpenChat }: HomeScreenProps)
 
   const aiInsights = [
     {
-      type: 'Doctor AI',
-      message: 'Sleep patterns have improved today! Nap times are becoming regular.',
-      time: '1 hour ago',
+      type: t('home.aiInsight1Type'),
+      message: t('home.aiInsight1Message'),
+      time: t('home.aiInsight1Time'),
     },
     {
-      type: 'Mom AI',
-      message: 'Other moms are starting solid foods around this time. Just for your reference!',
-      time: '3 hours ago',
+      type: t('home.aiInsight2Type'),
+      message: t('home.aiInsight2Message'),
+      time: t('home.aiInsight2Time'),
     },
   ];
 
   return (
-    <div className="h-full w-full overflow-auto bg-gradient-to-b from-[#FFFDF9] to-[#FFF8F0] dark:from-gray-900 dark:to-gray-800 p-4">
+    <div className="h-full w-full overflow-auto p-4">
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
-          <h2 className="text-[#6AA6FF] dark:text-[#9ADBC6] mb-2">Today's Parenting Diary</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400">{new Date().toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
+          <h2 className="text-[#6AA6FF] dark:text-[#9ADBC6] mb-2">{t('home.title')}</h2>
+          <p className="text-sm text-[#CFCFCF] dark:text-[#CFCFCF]">{new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
             day: 'numeric',
-            weekday: 'long' 
+            weekday: 'long'
           })}</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <Card className="bg-white dark:bg-gray-800 shadow-xl border-2 border-[#6AA6FF]/20 dark:border-[#9ADBC6]/30 rounded-2xl overflow-hidden">
+          <Card className="bg-card shadow-xl border-2 border-[#6AA6FF]/20 dark:border-[#9ADBC6]/30 rounded-2xl overflow-hidden">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
@@ -76,11 +78,11 @@ export default function HomeScreen({ onAddRecord, onOpenChat }: HomeScreenProps)
                     />
                   ) : (
                     <h3 className="text-lg font-bold flex items-center gap-2">
-                      <span className="text-gray-500 dark:text-gray-400">{randomAdjective}</span>
+                      <span className="text-[#CFCFCF] dark:text-[#CFCFCF]">{randomAdjective}</span>
                       <span className="text-[#6AA6FF] dark:text-[#9ADBC6]">{babyInfo.name}</span>
                       <button
                         onClick={() => setIsEditingName(true)}
-                        className="text-gray-400 hover:text-[#6AA6FF] dark:hover:text-[#9ADBC6] transition-colors"
+                        className="text-[#A5A5A5] dark:text-[#A5A5A5] hover:text-[#6AA6FF] dark:hover:text-[#9ADBC6] transition-colors"
                       >
                         <Pencil className="h-3.5 w-3.5" />
                       </button>
@@ -128,18 +130,18 @@ export default function HomeScreen({ onAddRecord, onOpenChat }: HomeScreenProps)
                           >
                             <Icon className="h-3.5 w-3.5" style={{ color: record.color }} />
                           </div>
-                          <span className="text-gray-700 dark:text-gray-300">
-                            {record.type === 'sleep' && `Nap ${record.duration}`}
-                            {record.type === 'meal' && `Feed ${record.amount}`}
-                            {record.type === 'health' && `Temp ${record.temp}`}
+                          <span className="text-[#F3F3F3] dark:text-[#F3F3F3]">
+                            {record.type === 'sleep' && `${t('home.nap')} ${record.duration}`}
+                            {record.type === 'meal' && `${t('home.feed')} ${record.amount}`}
+                            {record.type === 'health' && `${t('home.temp')} ${record.temp}`}
                           </span>
-                          <span className="text-gray-400 dark:text-gray-500 ml-auto">{record.time}</span>
+                          <span className="text-[#A5A5A5] dark:text-[#A5A5A5] ml-auto">{record.time}</span>
                         </div>
                       );
                     })}
                     {recentRecords.length === 0 && (
-                      <p className="text-xs text-gray-400 dark:text-gray-500 text-center py-2">
-                        Log your first record of the day!
+                      <p className="text-xs text-gray-400 dark:text-gray-300 text-center py-2">
+                        {t('home.firstRecord')}
                       </p>
                     )}
                   </div>
@@ -148,10 +150,10 @@ export default function HomeScreen({ onAddRecord, onOpenChat }: HomeScreenProps)
             </CardContent>
           </Card>
 
-          <Card className="bg-white dark:bg-gray-800 shadow-xl border-2 border-[#9ADBC6]/20 dark:border-[#9ADBC6]/30 rounded-2xl overflow-hidden">
+          <Card className="bg-card shadow-xl border-2 border-[#9ADBC6]/20 dark:border-[#9ADBC6]/30 rounded-2xl overflow-hidden">
             <CardHeader className="bg-gradient-to-r from-[#9ADBC6]/10 to-[#FFC98B]/10 dark:from-[#9ADBC6]/20 dark:to-[#FFC98B]/20 border-b border-[#9ADBC6]/20 dark:border-[#9ADBC6]/30">
               <CardTitle className="flex items-center justify-between text-[#9ADBC6]">
-                <span>🤖 AI Insights</span>
+                <span>🤖 {t('home.aiInsights')}</span>
                 <Button
                   size="sm"
                   variant="ghost"
@@ -159,7 +161,7 @@ export default function HomeScreen({ onAddRecord, onOpenChat }: HomeScreenProps)
                   className="text-[#9ADBC6] hover:bg-[#9ADBC6]/10 dark:hover:bg-[#9ADBC6]/20 h-8"
                 >
                   <Bot className="h-4 w-4 mr-1" />
-                  <span className="text-xs">Chat</span>
+                  <span className="text-xs">{t('home.chat')}</span>
                 </Button>
               </CardTitle>
             </CardHeader>
@@ -180,9 +182,9 @@ export default function HomeScreen({ onAddRecord, onOpenChat }: HomeScreenProps)
                     >
                       {insight.type}
                     </Badge>
-                    <span className="text-xs text-gray-400 dark:text-gray-500">{insight.time}</span>
+                    <span className="text-xs text-[#A5A5A5] dark:text-[#A5A5A5]">{insight.time}</span>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">{insight.message}</p>
+                  <p className="text-sm text-[#F3F3F3] dark:text-[#F3F3F3]">{insight.message}</p>
                 </div>
               ))}
             </CardContent>
@@ -190,25 +192,25 @@ export default function HomeScreen({ onAddRecord, onOpenChat }: HomeScreenProps)
         </div>
 
         <div className="grid grid-cols-3 gap-3">
-          <Card className="bg-gradient-to-br from-[#6AA6FF]/10 to-[#6AA6FF]/5 dark:from-[#6AA6FF]/20 dark:to-[#6AA6FF]/10 border-[#6AA6FF]/30 dark:bg-gray-800">
+          <Card className="bg-card border-[#6AA6FF]/30">
             <CardContent className="p-4 text-center">
               <TrendingUp className="h-6 w-6 mx-auto mb-2 text-[#6AA6FF]" />
-              <p className="text-xs text-gray-600 dark:text-gray-400">Growth</p>
-              <p className="text-[#6AA6FF]">Normal</p>
+              <p className="text-xs text-[#CFCFCF] dark:text-[#CFCFCF]">{t('home.growth')}</p>
+              <p className="text-[#6AA6FF] dark:text-[#8BC5FF]">{t('home.normal')}</p>
             </CardContent>
           </Card>
-          <Card className="bg-gradient-to-br from-[#FFC98B]/10 to-[#FFC98B]/5 dark:from-[#FFC98B]/20 dark:to-[#FFC98B]/10 border-[#FFC98B]/30 dark:bg-gray-800">
+          <Card className="bg-card border-[#FFC98B]/30">
             <CardContent className="p-4 text-center">
               <Heart className="h-6 w-6 mx-auto mb-2 text-[#FFC98B]" />
-              <p className="text-xs text-gray-600 dark:text-gray-400">Health</p>
-              <p className="text-[#FFC98B]">Good</p>
+              <p className="text-xs text-[#CFCFCF] dark:text-[#CFCFCF]">{t('home.health')}</p>
+              <p className="text-[#FFC98B] dark:text-[#FFD8A8]">{t('home.good')}</p>
             </CardContent>
           </Card>
-          <Card className="bg-gradient-to-br from-[#9ADBC6]/10 to-[#9ADBC6]/5 dark:from-[#9ADBC6]/20 dark:to-[#9ADBC6]/10 border-[#9ADBC6]/30 dark:bg-gray-800">
+          <Card className="bg-card border-[#9ADBC6]/30">
             <CardContent className="p-4 text-center">
               <Moon className="h-6 w-6 mx-auto mb-2 text-[#9ADBC6]" />
-              <p className="text-xs text-gray-600 dark:text-gray-400">Sleep</p>
-              <p className="text-[#9ADBC6]">Good</p>
+              <p className="text-xs text-[#CFCFCF] dark:text-[#CFCFCF]">{t('home.sleep')}</p>
+              <p className="text-[#9ADBC6] dark:text-[#B5E8D8]">{t('home.good')}</p>
             </CardContent>
           </Card>
         </div>

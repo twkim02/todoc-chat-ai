@@ -1,5 +1,4 @@
 import { Settings, ChevronDown, Moon, Sun, Globe, HelpCircle, Sliders, LogOut } from 'lucide-react';
-import { useState } from 'react';
 import { Button } from './ui/button';
 import {
   Select,
@@ -16,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { toast } from 'sonner';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface HeaderProps {
   selectedBaby: string;
@@ -27,7 +27,7 @@ interface HeaderProps {
 }
 
 export default function Header({ selectedBaby, onBabyChange, onSettingsClick, onLogout, isDarkMode, onDarkModeToggle }: HeaderProps) {
-  const [language, setLanguage] = useState('ko');
+  const { language, setLanguage, t } = useLanguage();
 
   const handleDarkModeToggle = () => {
     const newMode = !isDarkMode;
@@ -38,7 +38,7 @@ export default function Header({ selectedBaby, onBabyChange, onSettingsClick, on
   const handleLanguageToggle = () => {
     const newLang = language === 'ko' ? 'en' : 'ko';
     setLanguage(newLang);
-    toast.info(newLang === 'ko' ? 'Switched to Korean' : 'Switched to English');
+    toast.info(newLang === 'ko' ? '한국어로 전환되었습니다' : 'Switched to English');
   };
 
   const handleCustomerService = () => {
@@ -57,7 +57,7 @@ export default function Header({ selectedBaby, onBabyChange, onSettingsClick, on
     }
   };
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-16 px-4 flex items-center justify-between bg-[#FFFDF9] dark:bg-gray-900 border-b border-[#6AA6FF]/20 dark:border-gray-700">
+    <header className="fixed top-0 left-0 right-0 z-50 h-16 px-4 flex items-center justify-between bg-background border-b border-[#6AA6FF]/20 dark:border-gray-700">
       <div className="flex items-center gap-2">
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#6AA6FF] to-[#9ADBC6] flex items-center justify-center">
           <span className="text-white">📖</span>
@@ -66,10 +66,10 @@ export default function Header({ selectedBaby, onBabyChange, onSettingsClick, on
       </div>
 
       <Select value={selectedBaby} onValueChange={onBabyChange}>
-        <SelectTrigger className="w-[140px] border-[#6AA6FF]/30 dark:border-[#9ADBC6]/30 bg-white dark:bg-gray-800 dark:text-white">
+        <SelectTrigger className="w-[140px] border-[#6AA6FF]/30 dark:border-[#9ADBC6]/30 bg-card text-foreground">
           <SelectValue placeholder="Select Baby" />
         </SelectTrigger>
-        <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
+        <SelectContent className="bg-popover border-border">
           <SelectItem value="1">First Child</SelectItem>
           <SelectItem value="2">Second Child</SelectItem>
           <SelectItem value="3">Third Child</SelectItem>
@@ -106,12 +106,12 @@ export default function Header({ selectedBaby, onBabyChange, onSettingsClick, on
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleSettings}>
             <Sliders className="h-4 w-4 mr-2" />
-            Settings
+            {t('header.settings')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout} className="text-red-600">
             <LogOut className="h-4 w-4 mr-2" />
-            Logout
+            {t('header.logout')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { toast } from 'sonner';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface Message {
   id: string;
@@ -30,6 +31,7 @@ interface ChatSession {
 }
 
 export default function ChatScreen() {
+  const { t } = useLanguage();
   const [activeAgent, setActiveAgent] = useState<'doctor' | 'mom' | 'nutritionist'>('doctor');
   const [currentSessionId, setCurrentSessionId] = useState('1');
   const [sessions, setSessions] = useState<ChatSession[]>([
@@ -302,11 +304,11 @@ When things are tough, be sure to stop by ToDoc and leave even a small story.`;
   };
 
   return (
-    <div className="h-full w-full flex flex-col bg-gradient-to-b from-[#FFFDF9] to-[#FFF8F0] dark:from-gray-900 dark:to-gray-800">
+    <div className="h-full w-full flex flex-col">
       <div className="max-w-2xl mx-auto w-full flex flex-col h-full">
         <div className="p-4 pb-2">
           <div className="flex items-center justify-between mb-1">
-            <h2 className="text-[#6AA6FF] dark:text-[#9ADBC6]">AI Chat</h2>
+            <h2 className="text-[#6AA6FF] dark:text-[#9ADBC6]">{t('chat.title')}</h2>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
@@ -315,7 +317,7 @@ When things are tough, be sure to stop by ToDoc and leave even a small story.`;
                 className="text-xs h-8 border-[#6AA6FF]/30 text-[#6AA6FF] hover:bg-[#6AA6FF]/10"
               >
                 <FileText className="h-3 w-3 mr-1" />
-                Import Records
+                {t('chat.importRecords')}
               </Button>
 
               <DropdownMenu>
@@ -351,31 +353,31 @@ When things are tough, be sure to stop by ToDoc and leave even a small story.`;
               </Button>
             </div>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Chat with our expert AIs</p>
+          <p className="text-sm text-[#CFCFCF] dark:text-[#CFCFCF]">{t('chat.subtitle')}</p>
         </div>
 
         <Tabs value={activeAgent} onValueChange={(v: string) => setActiveAgent(v as any)} className="px-4">
-          <TabsList className="grid grid-cols-3 w-full bg-white/50 dark:bg-gray-800/50 p-1 rounded-xl">
+          <TabsList className="grid grid-cols-3 w-full bg-card/80 p-1 rounded-xl">
             <TabsTrigger
               value="doctor"
               className="flex items-center gap-1.5 text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#6AA6FF] data-[state=active]:to-[#5a96ef] data-[state=active]:text-white rounded-lg"
             >
               <Bot className="h-3.5 w-3.5" />
-              <span>Doctor</span>
+              <span>{t('chat.doctor')}</span>
             </TabsTrigger>
             <TabsTrigger
               value="mom"
               className="flex items-center gap-1.5 text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#FFC98B] data-[state=active]:to-[#ffb86b] data-[state=active]:text-gray-800 rounded-lg"
             >
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Mom</span>
+              <span>{t('chat.mom')}</span>
             </TabsTrigger>
             <TabsTrigger
               value="nutritionist"
               className="flex items-center gap-1.5 text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#9ADBC6] data-[state=active]:to-[#7ac7b0] data-[state=active]:text-white rounded-lg"
             >
               <Utensils className="h-3.5 w-3.5" />
-              <span>Nutri</span>
+              <span>{t('chat.nutrition')}</span>
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -387,12 +389,12 @@ When things are tough, be sure to stop by ToDoc and leave even a small story.`;
               className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'} ${message.role === 'system' ? 'justify-center' : ''}`}
             >
               {message.role === 'system' ? (
-                <div className="bg-gray-100 text-gray-600 text-xs py-1 px-3 rounded-full">
+                <div className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs py-1 px-3 rounded-full">
                   {message.content}
                 </div>
               ) : (
                 <>
-                  <Avatar className={`h-8 w-8 ${message.role === 'user' ? 'bg-gray-200 dark:bg-gray-700'
+                  <Avatar className={`h-8 w-8 ${message.role === 'user' ? 'bg-muted'
                     : activeAgent === 'doctor' ? 'bg-[#6AA6FF]'
                       : activeAgent === 'mom' ? 'bg-[#FFC98B]'
                         : 'bg-[#9ADBC6]'
@@ -411,20 +413,20 @@ When things are tough, be sure to stop by ToDoc and leave even a small story.`;
                     className={`flex-1 max-w-[75%] rounded-2xl p-3 ${message.role === 'user'
                       ? 'bg-[#6AA6FF] text-white'
                       : activeAgent === 'doctor'
-                        ? 'bg-white dark:bg-gray-800 border border-[#6AA6FF]/20 dark:border-[#6AA6FF]/30'
+                        ? 'bg-card border border-[#6AA6FF]/20 dark:border-[#6AA6FF]/30'
                         : activeAgent === 'mom'
-                          ? 'bg-white dark:bg-gray-800 border border-[#FFC98B]/20 dark:border-[#FFC98B]/30'
-                          : 'bg-white dark:bg-gray-800 border border-[#9ADBC6]/20 dark:border-[#9ADBC6]/30'
+                          ? 'bg-card border border-[#FFC98B]/20 dark:border-[#FFC98B]/30'
+                          : 'bg-card border border-[#9ADBC6]/20 dark:border-[#9ADBC6]/30'
                       }`}
                   >
                     <p
-                      className={`text-sm ${message.role === 'user' ? 'text-white' : 'text-gray-800 dark:text-gray-200'
+                      className={`text-sm ${message.role === 'user' ? 'text-white' : 'text-[#F3F3F3] dark:text-[#F3F3F3]'
                         }`}
                       style={{ whiteSpace: 'pre-wrap' }}
                     >
                       {message.content}
                     </p>
-                    <span className={`text-xs mt-1 block ${message.role === 'user' ? 'text-white/70' : 'text-gray-400 dark:text-gray-500'}`}>
+                    <span className={`text-xs mt-1 block ${message.role === 'user' ? 'text-white/70' : 'text-[#A5A5A5] dark:text-[#A5A5A5]'}`}>
                       {message.timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
@@ -450,14 +452,14 @@ When things are tough, be sure to stop by ToDoc and leave even a small story.`;
           </div>
         </div>
 
-        <div className="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+        <div className="p-4 bg-card border-t border-border">
           <div className="flex gap-2">
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              placeholder={`Ask ${activeAgent === 'doctor' ? 'Doctor AI' : activeAgent === 'mom' ? 'Mom AI' : 'Nutritionist AI'}...`}
-              className="flex-1 border-[#6AA6FF]/30 dark:border-[#9ADBC6]/30 dark:bg-gray-800 dark:text-white"
+              placeholder={t('chat.inputPlaceholder')}
+              className="flex-1 border-[#6AA6FF]/30 dark:border-[#9ADBC6]/30 bg-input"
             />
             <Button
               onClick={handleSendMessage}
