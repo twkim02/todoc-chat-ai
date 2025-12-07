@@ -50,6 +50,8 @@ export const translations = {
     'category.health': '건강',
     'category.development': '발달',
     'category.emotion': '감정',
+    'category.diaper': '대소변',
+    'category.other': '메모',
 
     // Record Form
     'form.new': '새',
@@ -63,11 +65,16 @@ export const translations = {
     'form.saveEntry': '기록 저장',
     'form.fillRequired': '제목과 날짜를 입력해주세요.',
     'form.saved': '기록이 저장되었습니다.',
+    'form.didBurp': '아기가 트림했나요?',
+    'form.selectStartTime': '시작 시간을 선택해주세요.',
 
     // Growth Form
     'growth.height': '키 (cm)',
     'growth.weight': '몸무게 (kg)',
     'growth.headCircumference': '머리둘레 (cm)',
+    'growth.heightLabel': '키',
+    'growth.weightLabel': '몸무게',
+    'growth.headLabel': '머리둘레',
 
     // Sleep Form
     'sleep.startTime': '시작 시간',
@@ -76,12 +83,18 @@ export const translations = {
     'sleep.good': '좋음',
     'sleep.fair': '보통',
     'sleep.poor': '나쁨',
+    'sleep.startLabel': '시작',
+    'sleep.endLabel': '종료',
+    'sleep.qualityLabel': '수면 질',
 
     // Meal Form
     'meal.foodType': '음식 종류',
     'meal.foodPlaceholder': '예: 모유, 분유, 죽',
     'meal.amount': '양',
     'meal.amountPlaceholder': '예: 120ml, 1그릇',
+    'meal.foodLabel': '음식',
+    'meal.amountLabel': '양',
+    'meal.burpComplete': '✅ 트림 완료',
 
     // Health Form
     'health.temperature': '체온 (°C)',
@@ -92,6 +105,28 @@ export const translations = {
     'health.rash': '발진',
     'health.vomiting': '구토',
     'health.diarrhea': '설사',
+    'health.other': '기타',
+    'health.otherPlaceholder': '기타 증상을 입력하세요...',
+    'health.tempLabel': '체온',
+    'health.symptomsLabel': '증상',
+
+    // Diaper Form
+    'diaper.amount': '양',
+    'diaper.condition': '상태',
+    'diaper.color': '색상',
+    'diaper.amountLabel': '양',
+    'diaper.conditionLabel': '상태',
+    'diaper.colorLabel': '색상',
+    'diaper.low': '적음',
+    'diaper.medium': '보통',
+    'diaper.high': '많음',
+    'diaper.normal': '정상',
+    'diaper.diarrhea': '설사',
+    'diaper.constipation': '변비',
+    'diaper.yellow': '노란색',
+    'diaper.brown': '갈색',
+    'diaper.green': '녹색',
+    'diaper.other': '기타',
 
     // Development Form
     'development.milestone': '이정표',
@@ -208,6 +243,8 @@ export const translations = {
     'category.health': 'Health',
     'category.development': 'Development',
     'category.emotion': 'Emotion',
+    'category.diaper': 'Diaper',
+    'category.other': 'Other',
 
     // Record Form
     'form.new': 'New',
@@ -221,11 +258,16 @@ export const translations = {
     'form.saveEntry': 'Save Entry',
     'form.fillRequired': 'Please fill in the title and date.',
     'form.saved': 'entry has been saved.',
+    'form.didBurp': 'Did the baby burp?',
+    'form.selectStartTime': 'Please select a start time.',
 
     // Growth Form
     'growth.height': 'Height (cm)',
     'growth.weight': 'Weight (kg)',
     'growth.headCircumference': 'Head Circumference (cm)',
+    'growth.heightLabel': 'Height',
+    'growth.weightLabel': 'Weight',
+    'growth.headLabel': 'Head',
 
     // Sleep Form
     'sleep.startTime': 'Start Time',
@@ -234,12 +276,18 @@ export const translations = {
     'sleep.good': 'Good',
     'sleep.fair': 'Fair',
     'sleep.poor': 'Poor',
+    'sleep.startLabel': 'Start',
+    'sleep.endLabel': 'End',
+    'sleep.qualityLabel': 'Quality',
 
     // Meal Form
     'meal.foodType': 'Food Type',
     'meal.foodPlaceholder': 'e.g., Breast milk, Formula, Porridge',
     'meal.amount': 'Amount',
     'meal.amountPlaceholder': 'e.g., 120ml, 1 bowl',
+    'meal.foodLabel': 'Food',
+    'meal.amountLabel': 'Amount',
+    'meal.burpComplete': '✅ Burp Complete',
 
     // Health Form
     'health.temperature': 'Temperature (°C)',
@@ -250,6 +298,28 @@ export const translations = {
     'health.rash': 'Rash',
     'health.vomiting': 'Vomiting',
     'health.diarrhea': 'Diarrhea',
+    'health.other': 'Other',
+    'health.otherPlaceholder': 'Enter other symptoms...',
+    'health.tempLabel': 'Temp',
+    'health.symptomsLabel': 'Symptoms',
+
+    // Diaper Form
+    'diaper.amount': 'Amount',
+    'diaper.condition': 'Condition',
+    'diaper.color': 'Color',
+    'diaper.amountLabel': 'Amount',
+    'diaper.conditionLabel': 'Condition',
+    'diaper.colorLabel': 'Color',
+    'diaper.low': 'Low',
+    'diaper.medium': 'Medium',
+    'diaper.high': 'High',
+    'diaper.normal': 'Normal',
+    'diaper.diarrhea': 'Diarrhea',
+    'diaper.constipation': 'Constipation',
+    'diaper.yellow': 'Yellow',
+    'diaper.brown': 'Brown',
+    'diaper.green': 'Green',
+    'diaper.other': 'Other',
 
     // Development Form
     'development.milestone': 'Milestone',

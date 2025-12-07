@@ -62,7 +62,7 @@ export default function Header({ selectedBaby, onBabyChange, onSettingsClick, on
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#6AA6FF] to-[#9ADBC6] flex items-center justify-center">
           <span className="text-white">📖</span>
         </div>
-        <h1 className="text-[#6AA6FF] dark:text-[#9ADBC6]">ToDoc 2.0</h1>
+        <h1 className="text-[#6AA6FF] dark:text-[#9ADBC6]">ToDoc</h1>
       </div>
 
       <Select value={selectedBaby} onValueChange={onBabyChange}>
