@@ -520,7 +520,7 @@ const JournalForm = ({ categoryId, onSave, onBack, isDarkMode }: { categoryId: s
                   const symptomKey = s.toLowerCase().replace(/\s+/g, '') as 'cough' | 'fever' | 'runnynose' | 'rash' | 'vomiting' | 'diarrhea';
                   const translationKey = symptomKey === 'runnynose' ? 'runnyNose' : symptomKey;
                   return (
-                    <div key={s} className="flex items-center space-x-2 bg-white p-2 rounded border">
+                    <div key={s} className="flex items-center space-x-2 bg-white dark:bg-gray-700 p-2 rounded border">
                       <input
                         type="checkbox"
                         id={`symptom-${s}`}
@@ -533,14 +533,14 @@ const JournalForm = ({ categoryId, onSave, onBack, isDarkMode }: { categoryId: s
                             setDetails({ ...details, symptoms: current.filter((i: string) => i !== s) });
                           }
                         }}
-                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                        className="h-4 w-4 rounded border-2 border-gray-300 dark:border-gray-400 bg-white dark:bg-gray-500 text-primary focus:ring-primary focus:ring-2"
                       />
-                      <label htmlFor={`symptom-${s}`} className="text-xs">{t(`health.${translationKey}` as any)}</label>
+                      <label htmlFor={`symptom-${s}`} className="text-xs" style={{ color: '#000000' }}>{t(`health.${translationKey}` as any)}</label>
                     </div>
                   );
                 })}
                 {/* Other symptom option */}
-                <div className="flex items-center space-x-2 bg-white p-2 rounded border">
+                <div className="flex items-center space-x-2 bg-white dark:bg-gray-700 p-2 rounded border">
                   <input
                     type="checkbox"
                     id="symptom-other"
@@ -554,9 +554,9 @@ const JournalForm = ({ categoryId, onSave, onBack, isDarkMode }: { categoryId: s
                         otherSymptomText: isChecked ? (details.otherSymptomText || '') : ''
                       });
                     }}
-                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    className="h-4 w-4 rounded border-2 border-gray-300 dark:border-gray-400 bg-white dark:bg-gray-500 text-primary focus:ring-primary focus:ring-2"
                   />
-                  <label htmlFor="symptom-other" className="text-xs">{t('health.other')}</label>
+                  <label htmlFor="symptom-other" className="text-xs" style={{ color: '#000000' }}>{t('health.other')}</label>
                 </div>
               </div>
               {/* Custom symptom text input - shown when "Other" is checked */}
@@ -648,7 +648,10 @@ const JournalForm = ({ categoryId, onSave, onBack, isDarkMode }: { categoryId: s
         <Button variant="ghost" size="icon" onClick={onBack}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <h2 className="text-lg font-semibold" style={{ color: categoryInfo.color }}>
+        <h2 
+          className={`text-lg font-semibold ${categoryId === 'health' ? 'health-entry-title' : ''}`}
+          style={categoryId !== 'health' ? { color: categoryInfo.color } : undefined}
+        >
           {t('form.new')} {categoryInfo.label} {t('form.entry')}
         </h2>
       </div>
@@ -791,16 +794,34 @@ export default function RecordScreen({ isDarkMode = false }: { isDarkMode?: bool
         <div className="pt-2">
           <h2 className="font-medium text-muted-foreground mb-3">{t('record.addNew')}</h2>
           <div className="grid grid-cols-3 gap-3">
-            {recordCategories(t).map((cat) => (
-              <Card
-                key={cat.id}
-                className="flex flex-col items-center justify-center p-4 text-center cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => setView({ screen: 'form', categoryId: cat.id })}
-              >
-                <div className="mb-2" style={{ color: cat.color }}>{cat.icon}</div>
-                <p className="text-xs font-medium">{cat.label}</p>
-              </Card>
-            ))}
+            {recordCategories(t).map((cat) => {
+              // Enhanced colors for dark mode visibility - brighter and more saturated
+              const getIconColor = () => {
+                if (cat.id === 'health') {
+                  return 'text-red-600 dark:text-red-400';
+                }
+                if (cat.id === 'other') {
+                  return 'text-gray-600 dark:text-gray-300';
+                }
+                return '';
+              };
+              
+              return (
+                <Card
+                  key={cat.id}
+                  className="flex flex-col items-center justify-center p-4 text-center cursor-pointer hover:shadow-md transition-shadow"
+                  onClick={() => setView({ screen: 'form', categoryId: cat.id })}
+                >
+                  <div 
+                    className={`mb-2 ${getIconColor()}`} 
+                    style={cat.id !== 'health' && cat.id !== 'other' ? { color: cat.color } : undefined}
+                  >
+                    {cat.icon}
+                  </div>
+                  <p className={`text-xs font-medium`}>{cat.label}</p>
+                </Card>
+              );
+            })}
           </div>
         </div>
 

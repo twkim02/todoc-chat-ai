@@ -13,6 +13,28 @@ import {
 import { toast } from 'sonner';
 import { useLanguage } from '../contexts/LanguageContext';
 
+// Hook to detect dark mode
+function useDarkMode() {
+  const [isDark, setIsDark] = useState(() => 
+    document.documentElement.classList.contains('dark')
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return isDark;
+}
+
 interface Message {
   id: string;
   role: 'user' | 'ai' | 'system';
@@ -32,6 +54,7 @@ interface ChatSession {
 
 export default function ChatScreen() {
   const { t } = useLanguage();
+  const isDark = useDarkMode();
   const [activeAgent, setActiveAgent] = useState<'doctor' | 'mom' | 'nutritionist'>('doctor');
   const [currentSessionId, setCurrentSessionId] = useState('1');
   const [sessions, setSessions] = useState<ChatSession[]>([
@@ -252,14 +275,14 @@ export default function ChatScreen() {
     <div className="h-full w-full flex flex-col">
       <div className="max-w-2xl mx-auto w-full flex flex-col h-full">
         <div className="p-4 pb-2">
-          <div className="flex items-center justify-between mb-1">
-            <h2 className="text-[#6AA6FF] dark:text-[#9ADBC6]">{t('chat.title')}</h2>
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between mb-1 gap-2">
+            <h2 className="text-[#6AA6FF] dark:text-[#9ADBC6] whitespace-nowrap flex-shrink-0">{t('chat.title')}</h2>
+            <div className="flex items-center gap-1.5 min-w-0 flex-shrink">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleImportRecord}
-                className="text-xs h-8 border-[#6AA6FF]/30 text-[#6AA6FF] hover:bg-[#6AA6FF]/10"
+                className="text-xs h-8 border-[#6AA6FF]/30 text-[#6AA6FF] hover:bg-[#6AA6FF]/10 hidden sm:flex"
               >
                 <FileText className="h-3 w-3 mr-1" />
                 {t('chat.importRecords')}
@@ -270,10 +293,10 @@ export default function ChatScreen() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-[#6AA6FF]/30 text-sm h-8"
+                    className="border-[#6AA6FF]/30 text-xs sm:text-sm h-8 max-w-[70px] sm:max-w-[90px]"
                   >
-                    <span className="max-w-[100px] truncate">{currentSession?.name}</span>
-                    <ChevronDown className="h-3 w-3 ml-1" />
+                    <span className="truncate">{currentSession?.name}</span>
+                    <ChevronDown className="h-3 w-3 ml-0.5 flex-shrink-0" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
@@ -305,24 +328,39 @@ export default function ChatScreen() {
           <TabsList className="grid grid-cols-3 w-full bg-card/80 p-1 rounded-xl">
             <TabsTrigger
               value="doctor"
-              className="flex items-center gap-1.5 text-xs sm:text-sm data-[state=active]:!bg-gradient-to-r data-[state=active]:!from-[#6AA6FF] data-[state=active]:!to-[#5a96ef] data-[state=active]:!text-white data-[state=active]:!border-2 data-[state=active]:!border-[#FFC98B] rounded-lg"
+              className="flex items-center gap-1.5 text-xs sm:text-sm rounded-lg transition-colors doctor-ai-tab"
+              style={
+                !isDark && activeAgent === 'doctor'
+                  ? { backgroundColor: '#6AA6FF', color: '#ffffff' }
+                  : undefined
+              }
             >
-              <Bot className="h-3.5 w-3.5" />
-              <span>{t('chat.doctor')}</span>
+              <Bot className="h-3.5 w-3.5" style={!isDark && activeAgent === 'doctor' ? { color: '#ffffff' } : undefined} />
+              <span style={!isDark && activeAgent === 'doctor' ? { color: '#ffffff' } : undefined}>{t('chat.doctor')}</span>
             </TabsTrigger>
             <TabsTrigger
               value="mom"
-              className="flex items-center gap-1.5 text-xs sm:text-sm data-[state=active]:!bg-gradient-to-r data-[state=active]:!from-[#FFC98B] data-[state=active]:!to-[#ffb86b] data-[state=active]:!text-gray-800 data-[state=active]:!border-2 data-[state=active]:!border-[#FFC98B] rounded-lg"
+              className="flex items-center gap-1.5 text-xs sm:text-sm rounded-lg transition-colors mom-ai-tab"
+              style={
+                !isDark && activeAgent === 'mom'
+                  ? { backgroundColor: '#FFC98B', color: '#1f2937' }
+                  : undefined
+              }
             >
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>{t('chat.mom')}</span>
+              <Sparkles className="h-3.5 w-3.5" style={!isDark && activeAgent === 'mom' ? { color: '#1f2937' } : undefined} />
+              <span style={!isDark && activeAgent === 'mom' ? { color: '#1f2937' } : undefined}>{t('chat.mom')}</span>
             </TabsTrigger>
             <TabsTrigger
               value="nutritionist"
-              className="flex items-center gap-1.5 text-xs sm:text-sm data-[state=active]:!bg-gradient-to-r data-[state=active]:!from-[#9ADBC6] data-[state=active]:!to-[#7ac7b0] data-[state=active]:!text-gray-800 data-[state=active]:!border-2 data-[state=active]:!border-[#FFC98B] rounded-lg"
+              className="flex items-center gap-1.5 text-xs sm:text-sm rounded-lg transition-colors nutrition-ai-tab"
+              style={
+                !isDark && activeAgent === 'nutritionist'
+                  ? { backgroundColor: '#9ADBC6', color: '#ffffff' }
+                  : undefined
+              }
             >
-              <Utensils className="h-3.5 w-3.5" />
-              <span>{t('chat.nutrition')}</span>
+              <Utensils className="h-3.5 w-3.5" style={!isDark && activeAgent === 'nutritionist' ? { color: '#ffffff' } : undefined} />
+              <span style={!isDark && activeAgent === 'nutritionist' ? { color: '#ffffff' } : undefined}>{t('chat.nutrition')}</span>
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -344,13 +382,17 @@ export default function ChatScreen() {
                       : activeAgent === 'mom' ? 'bg-[#FFC98B]'
                         : 'bg-[#9ADBC6]'
                     }`}>
-                    <AvatarFallback>
+                    <AvatarFallback className="[&>*]:transition-colors">
                       {message.role === 'user' ? (
-                        <User className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                        <User className="h-4 w-4 text-black dark:text-white" />
                       ) : activeAgent === 'nutritionist' ? (
-                        <Utensils className="h-4 w-4 text-white" />
+                        <Utensils className="h-4 w-4 text-black dark:text-white" />
+                      ) : activeAgent === 'doctor' ? (
+                        <Bot className="h-4 w-4 text-black dark:text-white" />
+                      ) : activeAgent === 'mom' ? (
+                        <Sparkles className="h-4 w-4 text-black dark:text-white" />
                       ) : (
-                        <Bot className={`h-4 w-4 ${activeAgent === 'doctor' ? 'text-white' : 'text-gray-800'}`} />
+                        <Bot className="h-4 w-4 text-black dark:text-white" />
                       )}
                     </AvatarFallback>
                   </Avatar>

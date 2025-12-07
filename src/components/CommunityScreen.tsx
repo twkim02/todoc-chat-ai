@@ -378,7 +378,7 @@ export default function CommunityScreen() {
                   relative py-2.5 px-4 rounded-xl text-sm font-medium transition-all duration-200
                   ${activeTab === tab
                     ? 'bg-gradient-to-r from-[#6AA6FF] to-[#9ADBC6] text-white shadow-lg'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-[#6AA6FF] dark:hover:text-[#9ADBC6]'
+                    : 'text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-[#6AA6FF] dark:hover:text-[#9ADBC6]'
                   }
                 `}
               >
@@ -455,7 +455,7 @@ export default function CommunityScreen() {
                   {post.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-[#F3F3F3] dark:text-[#F3F3F3]"
+                      className="text-xs px-2 py-1 rounded-full post-tag"
                     >
                       #{tag}
                     </span>
