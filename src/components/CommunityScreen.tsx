@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, MessageCircle, Share2, Plus, Search, TrendingUp, ArrowLeft, Image as ImageIcon, Tag, MapPin, Send, X } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Plus, Search, TrendingUp, ArrowLeft, Image as ImageIcon, Tag, MapPin, Send } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent } from './ui/card';
@@ -534,7 +534,7 @@ export default function CommunityScreen() {
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-3">
               <TrendingUp className="h-4 w-4 text-[#6AA6FF]" />
-              <h3 className="text-sm text-[#6AA6FF]">Trending Tags</h3>
+              <h3 className="text-sm text-[#6AA6FF]">{t('community.trendingTag')}</h3>
             </div>
             <div className="flex gap-2 flex-wrap">
               {['baby food', 'sleep', 'play', 'development', 'baby items', 'health'].map((tag) => (

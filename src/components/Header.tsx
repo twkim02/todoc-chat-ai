@@ -67,12 +67,12 @@ export default function Header({ selectedBaby, onBabyChange, onSettingsClick, on
 
       <Select value={selectedBaby} onValueChange={onBabyChange}>
         <SelectTrigger className="w-[140px] border-[#6AA6FF]/30 dark:border-[#9ADBC6]/30 bg-card text-foreground">
-          <SelectValue placeholder="Select Baby" />
+          <SelectValue placeholder={t('header.selectBaby')} />
         </SelectTrigger>
         <SelectContent className="bg-popover border-border">
-          <SelectItem value="1">First Child</SelectItem>
-          <SelectItem value="2">Second Child</SelectItem>
-          <SelectItem value="3">Third Child</SelectItem>
+          <SelectItem value="1">{t('header.firstChild')}</SelectItem>
+          <SelectItem value="2">{t('header.secondChild')}</SelectItem>
+          <SelectItem value="3">{t('header.thirdChild')}</SelectItem>
         </SelectContent>
       </Select>
 

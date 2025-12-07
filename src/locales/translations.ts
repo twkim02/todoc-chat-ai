@@ -3,6 +3,10 @@ export const translations = {
     // Header
     'header.settings': '설정',
     'header.logout': '로그아웃',
+    'header.selectBaby': '아기 선택',
+    'header.firstChild': '첫째',
+    'header.secondChild': '둘째',
+    'header.thirdChild': '셋째',
 
     // Navigation
     'nav.home': '홈',
@@ -175,6 +179,7 @@ export const translations = {
     'community.postPublished': '게시글이 게시되었습니다!',
     'community.noComments': '아직 댓글이 없습니다. 첫 댓글을 남겨주세요!',
     'community.writeComment': '댓글 작성...',
+    'community.trendingTag': '인기 태그',
 
     // Login Screen
     'login.title': 'Todoc에 오신 것을 환영합니다',
@@ -196,6 +201,10 @@ export const translations = {
     // Header
     'header.settings': 'Settings',
     'header.logout': 'Logout',
+    'header.selectBaby': 'Select Baby',
+    'header.firstChild': 'First Child',
+    'header.secondChild': 'Second Child',
+    'header.thirdChild': 'Third Child',
 
     // Navigation
     'nav.home': 'Home',
@@ -368,6 +377,7 @@ export const translations = {
     'community.postPublished': 'Post published!',
     'community.noComments': 'No comments yet. Be the first to share!',
     'community.writeComment': 'Write a comment...',
+    'community.trendingTag': 'Trending Tags',
 
     // Login Screen
     'login.title': 'Welcome to Todoc',
